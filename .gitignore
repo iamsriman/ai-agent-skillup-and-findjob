@@ -9,4 +9,9 @@ wheels/
 # Virtual environments
 .venv
 
+# Frontend build output and local config
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+
 .env

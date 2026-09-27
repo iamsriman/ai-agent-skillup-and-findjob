@@ -2,13 +2,14 @@ import requests
 from langchain.tools import tool
 from dotenv import load_dotenv
 import os
-from pprint import pprint
 load_dotenv()
 
 @tool
-def search_jobs(skill: str, location: str)-> list:
+def search_jobs(skill: str, location: str, country: str = "in") -> list[dict[str, str]] | str:
     """
-    search for jobs based on a skill and loaction.
+    Search for jobs based on a skill and location.
+    Use the two-letter country code for the location (for example, "us" for
+    the United States or "in" for India). Defaults to India.
     """
     print("calling search jobs tools")
     print(f"searching for {skill} jobs in {location}")
@@ -17,11 +18,11 @@ def search_jobs(skill: str, location: str)-> list:
     querystring = {
         "query":f"{skill} jobs in {location}",
         "page":"1",
-                "num_pages":"1",
-                "country":"in",
-                "employment_types": "FULLTIME",
-                "job_requirements":"no_experience",
-            }
+        "num_pages":"1",
+        "country": country.strip().lower(),
+        "employment_types": "FULLTIME",
+        "job_requirements":"no_experience",
+    }
 
     headers = {
         "x-rapidapi-key": os.getenv("RAPID_KEY"),
@@ -29,7 +30,8 @@ def search_jobs(skill: str, location: str)-> list:
         "Content-Type": "application/json"
     }
 
-    response = requests.get(url, headers=headers, params=querystring)
+    response = requests.get(url, headers=headers, params=querystring, timeout=(5, 25))
+    response.raise_for_status()
     data= response.json()
     jobs=data.get("data",{}).get("jobs",[])
     results=[]
@@ -41,5 +43,9 @@ def search_jobs(skill: str, location: str)-> list:
             "apply_link": job.get("job_apply_link", ""),
         })
 
+    if not results:
+        return (
+            f"No job listings were found for {skill} in {location}. "
+            "Try a nearby location or broaden your search."
+        )
     return results
-
