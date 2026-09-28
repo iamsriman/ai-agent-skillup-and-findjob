@@ -1,34 +1,28 @@
-export default function Header() {
+import { Menu } from "lucide-react";
+
+export default function Header({
+  menuButtonRef,
+  isLoadingConversations,
+  isDrawerOpen,
+  onOpenMenu,
+}) {
   return (
-    <header className="flex items-center justify-between border-b border-[#e7ece7] px-5 py-4 sm:px-8">
-      <a className="flex items-center gap-3 no-underline" href="/" aria-label="SkillMap AI home">
-        <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#174f3b] text-white shadow-sm">
-          <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
-            <path
-              d="M5 18.5 10 13l3 2.5L19 8"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path d="M14.5 8H19v4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </span>
-        <span>
-          <span className="block font-['Manrope'] text-base font-extrabold tracking-tight text-[#173a2e] sm:text-lg">
-            SkillMap AI
-          </span>
-          <span className="hidden text-xs text-[#718078] sm:block">
-            Skill-to-Career Mapping Assistant
-          </span>
-        </span>
-      </a>
-      <div className="flex items-center gap-2 rounded-full border border-[#e7ece7] bg-white px-3 py-1.5 text-xs font-semibold text-[#4e685b]">
-        <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-50" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-        </span>
-        Ready to help
+    <header className="flex h-16 shrink-0 items-center justify-between border-b border-line px-4 sm:px-6">
+      <div className="flex min-w-0 items-center gap-3">
+        <button
+          ref={menuButtonRef}
+          type="button"
+          onClick={onOpenMenu}
+          className="icon-button md:hidden"
+          aria-label="Open conversation menu"
+          aria-controls="conversation-sidebar"
+          aria-expanded={isDrawerOpen}
+        >
+          <Menu size={19} strokeWidth={1.8} aria-hidden="true" />
+        </button>
+        <h1 className="truncate text-sm font-medium text-secondary">
+          {isLoadingConversations ? "Loading conversations..." : "Career research"}
+        </h1>
       </div>
     </header>
   );

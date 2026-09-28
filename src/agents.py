@@ -20,7 +20,7 @@ system_prompts = """
 You are SkillMap AI, a career research assistant.
 
 You have access to these tools:
-- skill_demand_tool: Search for current industry demand, salaries, career trends, and technology information.
+- tavily_search: Search for current industry demand, salaries, career trends, and technology information.
 - search_jobs: Search for current job listings.
 
 TOOL USAGE:
@@ -66,6 +66,11 @@ except Exception:
 pool = ConnectionPool(conninfo=DATABASE_URL, max_size=10, kwargs={"autocommit": True})
 checkpointer = PostgresSaver(pool)
 
+print(
+    "REGISTERED TOOLS:",
+    [tool.name for tool in [skill_demand_tool, search_jobs]]
+)
+
 agent = create_agent(
     model=model,
     tools=[skill_demand_tool, search_jobs],
@@ -73,6 +78,7 @@ agent = create_agent(
     checkpointer=checkpointer,
     debug=True,
 )
+
 
 if __name__ == "__main__":
     user_query = "can u tell me what u given list of job opending in that tell about that Initiative Sewa Foundation and what is the role"

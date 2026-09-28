@@ -155,13 +155,17 @@ export default function Dashboard() {
       }
 
       const nextConversationId = result.conversation_id;
-      if (!activeId) setActiveId(nextConversationId);
+      setActiveId(nextConversationId);
       setMessages((current) => [
         ...current,
         { id: crypto.randomUUID(), role: "assistant", content: result.response },
       ]);
 
-      await refreshConversations();
+      try {
+        await refreshConversations();
+      } catch (refreshError) {
+        setNotice(refreshError.message || "Your reply was sent, but the conversation list couldn't refresh.");
+      }
     } catch (error) {
       if (error.status === 401) return;
       if (error.status === 404) {
@@ -214,6 +218,7 @@ export default function Dashboard() {
         <Header
           menuButtonRef={menuButtonRef}
           isLoadingConversations={isLoadingConversations}
+          isDrawerOpen={isDrawerOpen}
           onOpenMenu={() => setIsDrawerOpen(true)}
         />
 
