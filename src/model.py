@@ -3,8 +3,8 @@ from langchain.chat_models import init_chat_model
 
 load_dotenv()
 
-model=init_chat_model(
-    "groq:openai/gpt-oss-120b",
+model = init_chat_model(
+    "groq:openai/gpt-oss-20b",
     temperature=0.2
 )
 

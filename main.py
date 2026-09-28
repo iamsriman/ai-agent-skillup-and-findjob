@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.api.auth import auth_router
 from src.api.routes import router
 
 app = FastAPI(title="SkillMap AI API", version="1.0.0")
@@ -12,8 +13,9 @@ app.add_middleware(
         "http://127.0.0.1:5173",
     ],
     allow_credentials=False,
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type"],
+    allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],   # NEW
 )
 
+app.include_router(auth_router)   # NEW
 app.include_router(router)

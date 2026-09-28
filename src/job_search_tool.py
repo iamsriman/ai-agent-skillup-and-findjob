@@ -35,7 +35,7 @@ def search_jobs(skill: str, location: str, country: str = "in") -> list[dict[str
     data= response.json()
     jobs=data.get("data",{}).get("jobs",[])
     results=[]
-    for job in jobs:
+    for job in jobs[:5]:
         results.append({
             "title": job.get("job_title", ""),
             "company": job.get("employer_name", ""),
